@@ -31,7 +31,7 @@
     "extension": {
       "type": "secureObject",
       "defaultValue": {
-        "singleWffmMsDeployPackageUrl": null
+        "singleMsDeployPackageUrl": null
       }
     },
 
@@ -47,9 +47,9 @@
       "type": "string",
       "defaultValue": "[replace(parameters('standard').singleWebAppName, '$default', concat(parameters('deploymentId'),'-single'))]"
     },
-    "singleWffmMsDeployPackageUrl": {
+    "singleMsDeployPackageUrl": {
       "type": "securestring",
-      "defaultValue": "[parameters('extension').singleWffmMsDeployPackageUrl]"
+      "defaultValue": "[parameters('extension').singleMsDeployPackageUrl]"
     },
     "sqlServerName": {
       "type": "string",
@@ -113,7 +113,7 @@
                   {
                     "dbType": "SQL",
                     "connectionString": "[concat('Data Source=tcp:', variables('sqlServerFqdnTidy'), ',1433;Initial Catalog=master;User Id=', parameters('sqlServerLogin'), '@', variables('sqlServerNameTidy'), ';Password=', parameters('sqlServerPassword'), ';')]",
-                    "packageUri": "[parameters('singleWffmMsDeployPackageUrl')]",
+                    "packageUri": "[parameters('singleMsDeployPackageUrl')]",
                     "setParameters": {
                       "Application Path": "[variables('singleWebAppNameTidy')]",
                       "Core Admin Connection String": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=', variables('sqlServerFqdnTidy'), ',1433;Initial Catalog=',variables('coreSqlDatabaseNameTidy'),';User Id=', parameters('sqlServerLogin'), ';Password=', parameters('sqlServerPassword'), ';')]",
