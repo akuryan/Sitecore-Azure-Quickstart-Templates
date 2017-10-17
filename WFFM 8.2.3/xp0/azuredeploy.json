@@ -31,7 +31,7 @@
     "extension": {
       "type": "secureObject",
       "defaultValue": {
-        "singleMsDeployPackageUrl": null        
+        "singleWffmMsDeployPackageUrl": null
       }
     },
 
@@ -47,9 +47,9 @@
       "type": "string",
       "defaultValue": "[replace(parameters('standard').singleWebAppName, '$default', concat(parameters('deploymentId'),'-single'))]"
     },
-    "singleMsDeployPackageUrl": {
+    "singleWffmMsDeployPackageUrl": {
       "type": "securestring",
-      "defaultValue": "[parameters('extension').singleMsDeployPackageUrl]"
+      "defaultValue": "[parameters('extension').singleWffmMsDeployPackageUrl]"
     },
     "sqlServerName": {
       "type": "string",
@@ -84,25 +84,49 @@
   },
   "resources": [
     {
-      "name": "[concat(variables('singleWebAppNameTidy'), '/', 'MSDeploy')]",
-      "type": "Microsoft.Web/sites/extensions",
+      "name": "[variables('singleWebAppNameTidy')]",
+      "type": "Microsoft.Web/sites",
       "location": "[parameters('location')]",
       "apiVersion": "[variables('webApiVersion')]",
-      "properties": {
-        "addOnPackages": [
-          {
-            "dbType": "SQL",
-            "connectionString": "[concat('Data Source=tcp:', variables('sqlServerFqdnTidy'), ',1433;Initial Catalog=master;User Id=', parameters('sqlServerLogin'), '@', variables('sqlServerNameTidy'), ';Password=', parameters('sqlServerPassword'), ';')]",
-            "packageUri": "[parameters('singleMsDeployPackageUrl')]",
-            "setParameters": {
-              "Application Path": "[variables('singleWebAppNameTidy')]",
-              "Core Admin Connection String": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=', variables('sqlServerFqdnTidy'), ',1433;Initial Catalog=',variables('coreSqlDatabaseNameTidy'),';User Id=', parameters('sqlServerLogin'), ';Password=', parameters('sqlServerPassword'), ';')]",
-              "Master Admin Connection String": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=', variables('sqlServerFqdnTidy'), ',1433;Initial Catalog=',variables('masterSqlDatabaseNameTidy'),';User Id=', parameters('sqlServerLogin'), ';Password=', parameters('sqlServerPassword'), ';')]",
-              "Reporting Admin Connection String": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=', variables('sqlServerFqdnTidy'), ',1433;Initial Catalog=',variables('reportingSqlDatabaseNameTidy'),';User Id=', parameters('sqlServerLogin'), ';Password=', parameters('sqlServerPassword'), ';')]"
+      "properties": {},
+      "resources": [
+        {
+          "type": "slots",
+          "name": "single-staging",
+          "apiVersion": "[variables('webApiVersion')]",
+          "properties": {},
+          "location": "[parameters('location')]",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/sites', variables('singleWebAppNameTidy'))]"
+          ],
+          "resources": [
+            {
+              "name": "[concat(variables('singleWebAppNameTidy'), '/', 'single-staging', '/', 'MSDeploy')]",
+              "type": "Microsoft.Web/sites/slots/extensions",
+              "location": "[parameters('location')]",
+              "apiVersion": "[variables('webApiVersion')]",
+              "dependsOn": [
+                "[resourceId('Microsoft.Web/sites/slots', variables('singleWebAppNameTidy'), 'single-staging')]"
+              ],
+              "properties": {
+                "addOnPackages": [
+                  {
+                    "dbType": "SQL",
+                    "connectionString": "[concat('Data Source=tcp:', variables('sqlServerFqdnTidy'), ',1433;Initial Catalog=master;User Id=', parameters('sqlServerLogin'), '@', variables('sqlServerNameTidy'), ';Password=', parameters('sqlServerPassword'), ';')]",
+                    "packageUri": "[parameters('singleWffmMsDeployPackageUrl')]",
+                    "setParameters": {
+                      "Application Path": "[variables('singleWebAppNameTidy')]",
+                      "Core Admin Connection String": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=', variables('sqlServerFqdnTidy'), ',1433;Initial Catalog=',variables('coreSqlDatabaseNameTidy'),';User Id=', parameters('sqlServerLogin'), ';Password=', parameters('sqlServerPassword'), ';')]",
+                      "Master Admin Connection String": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=', variables('sqlServerFqdnTidy'), ',1433;Initial Catalog=',variables('masterSqlDatabaseNameTidy'),';User Id=', parameters('sqlServerLogin'), ';Password=', parameters('sqlServerPassword'), ';')]",
+                      "Reporting Admin Connection String": "[concat('Encrypt=True;TrustServerCertificate=False;Data Source=', variables('sqlServerFqdnTidy'), ',1433;Initial Catalog=',variables('reportingSqlDatabaseNameTidy'),';User Id=', parameters('sqlServerLogin'), ';Password=', parameters('sqlServerPassword'), ';')]"
+                    }
+                  }
+                ]
+              }
             }
-          }
-        ]
-      }
+          ]
+        }
+      ]
     }
   ]
 }
