@@ -248,7 +248,8 @@
               "location": "[parameters('location')]",
               "apiVersion": "[variables('webApiVersion')]",
               "dependsOn": [
-                "[resourceId('Microsoft.Web/sites/slots', variables('prcWebAppNameTidy'), variables('prc-slot-name'))]"
+                "[resourceId('Microsoft.Web/sites/slots', variables('prcWebAppNameTidy'), variables('prc-slot-name'))]",
+                "[concat('Microsoft.Web/sites/', variables('cmWebAppNameTidy'), '/slots/', variables('cm-slot-name') ,'/extensions/MSDeploy')]"
               ],
               "properties": {
                 "addOnPackages": [
@@ -291,7 +292,9 @@
               "location": "[parameters('location')]",
               "apiVersion": "[variables('webApiVersion')]",
               "dependsOn": [
-                "[resourceId('Microsoft.Web/sites/slots', variables('repWebAppNameTidy'), variables('rep-slot-name'))]"
+                "[resourceId('Microsoft.Web/sites/slots', variables('repWebAppNameTidy'), variables('rep-slot-name'))]",
+                "[concat('Microsoft.Web/sites/', variables('cmWebAppNameTidy'), '/slots/', variables('cm-slot-name') ,'/extensions/MSDeploy')]",
+                "[concat('Microsoft.Web/sites/', variables('prcWebAppNameTidy'), '/slots/', variables('prc-slot-name') ,'/extensions/MSDeploy')]"
               ],
               "properties": {
                 "addOnPackages": [
