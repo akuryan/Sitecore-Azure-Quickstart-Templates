@@ -26,9 +26,7 @@
         "cdWebAppName": "$default",
         "cdWebAppNameSlotName": "$default",
         "prcWebAppName": "$default",
-        "prcWebAppNameSlotName": "$default",
         "repWebAppName": "$default",
-        "repWebAppNameSlotName": "$default",
         "sqlServerName": "$default",
         "sqlServerLogin": null,
         "sqlServerPassword": null,
@@ -63,7 +61,7 @@
     },
     "cmWebAppNameSlotName": {
       "type": "string",
-      "defaultValue": "[replace(parameters('standard').cmWebAppNameSlotName, '$default', 'cm-staging')]"
+      "defaultValue": "cm-staging"
     },
     "cdWebAppName": {
       "type": "string",
@@ -71,7 +69,7 @@
     },
     "cdWebAppNameSlotName": {
       "type": "string",
-      "defaultValue": "[replace(parameters('standard').cdWebAppNameSlotName, '$default', 'cd-staging')]"
+      "defaultValue": "cd-staging"
     },
     "prcWebAppName": {
       "type": "string",
