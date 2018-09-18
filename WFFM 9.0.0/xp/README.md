@@ -4,7 +4,7 @@
     <img src="http://armviz.io/visualizebutton.png"/>
 </a>
 
-```azuredeploy.json``` deploys Web Forms for Marketers module into a Sitecore XP Environment web apps in stagings slots. Could be used for all WFFM versions - from 8.2.3 to 9.0.0
+```azuredeploy.json``` deploys Web Forms for Marketers module into a Sitecore XP Environment web apps in stagings slots of CD and CM web apps; REP/PRC web apps are deployed to production slots. Could be used for all WFFM versions - from 8.2.3 to 9.0.0
 
 ## Parameters
 
